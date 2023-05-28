@@ -1,0 +1,50 @@
+﻿@page
+@model IndexModel
+
+@using Microsoft.AspNetCore.Authentication
+
+<h2>Claims</h2>
+
+<dl>
+    @foreach (var claim in User.Claims)
+    {
+        <dt>@claim.Type</dt>
+        <dd>@claim.Value</dd>
+    }
+</dl>
+
+<h2>Properties</h2>
+
+<dl>
+    @{
+        var props = (await HttpContext.AuthenticateAsync())?.Properties?.Items ?? throw new NullReferenceException("Props are null");
+    }
+    @foreach (var prop in props)
+    {
+        <dt>@prop.Key</dt>
+        <dd>@prop.Value</dd>
+    }
+</dl>
+
+
+
+<div>
+    @foreach (var comment in @Model.Comments)
+    {
+        <p style="background-color: red;">
+          @comment.Login  
+        </p>
+        <p style="background-color: yellow;">
+          @comment.Text
+        </p>
+    }
+</div>
+
+
+<div>
+    <form method="post">
+        <input asp-for="WriteCommentModel.Text">
+        <input type="hidden" asp-for="ReturnUrl" />
+        <input type="submit" value="написать">
+    </form>
+</div>
